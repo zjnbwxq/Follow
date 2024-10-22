@@ -143,6 +143,22 @@ declare const achievements: drizzle_orm_pg_core.PgTableWithColumns<{
             baseColumn: never;
             generated: undefined;
         }, {}, {}>;
+        tx: drizzle_orm_pg_core.PgColumn<{
+            name: "tx";
+            tableName: "achievements";
+            dataType: "string";
+            columnType: "PgText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            isPrimaryKey: false;
+            isAutoincrement: false;
+            hasRuntimeDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+            generated: undefined;
+        }, {}, {}>;
     };
     dialect: "pg";
 }>;
@@ -155,6 +171,7 @@ declare const achievementsOpenAPISchema: zod.ZodObject<{
     progressMax: zod.ZodNumber;
     done: zod.ZodBoolean;
     doneAt: zod.ZodNullable<zod.ZodString>;
+    tx: zod.ZodNullable<zod.ZodString>;
 }, zod.UnknownKeysParam, zod.ZodTypeAny, {
     type: "received" | "checking" | "completed" | "incomplete";
     id: string;
@@ -164,6 +181,7 @@ declare const achievementsOpenAPISchema: zod.ZodObject<{
     progressMax: number;
     done: boolean;
     doneAt: string | null;
+    tx: string | null;
 }, {
     type: "received" | "checking" | "completed" | "incomplete";
     id: string;
@@ -173,6 +191,7 @@ declare const achievementsOpenAPISchema: zod.ZodObject<{
     progressMax: number;
     done: boolean;
     doneAt: string | null;
+    tx: string | null;
 }>;
 
 declare const languageSchema: z.ZodEnum<["en", "ja", "zh-CN", "zh-TW"]>;
@@ -213,6 +232,7 @@ declare const actions: drizzle_orm_pg_core.PgTableWithColumns<{
                     value: string;
                 }[];
                 result: {
+                    disabled?: boolean;
                     translation?: z.infer<typeof languageSchema>;
                     summary?: boolean;
                     readability?: boolean;
@@ -260,6 +280,7 @@ declare const actionsItemOpenAPISchema: z.ZodObject<{
         operator: "contains" | "not_contains" | "eq" | "not_eq" | "gt" | "lt" | "regex";
     }>, "many">;
     result: z.ZodObject<{
+        disabled: z.ZodOptional<z.ZodBoolean>;
         translation: z.ZodOptional<z.ZodEnum<["en", "ja", "zh-CN", "zh-TW"]>>;
         summary: z.ZodOptional<z.ZodBoolean>;
         readability: z.ZodOptional<z.ZodBoolean>;
@@ -292,6 +313,7 @@ declare const actionsItemOpenAPISchema: z.ZodObject<{
         webhooks: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
     }, "strip", z.ZodTypeAny, {
         summary?: boolean | undefined;
+        disabled?: boolean | undefined;
         translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
         readability?: boolean | undefined;
         sourceContent?: boolean | undefined;
@@ -309,6 +331,7 @@ declare const actionsItemOpenAPISchema: z.ZodObject<{
         webhooks?: string[] | undefined;
     }, {
         summary?: boolean | undefined;
+        disabled?: boolean | undefined;
         translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
         readability?: boolean | undefined;
         sourceContent?: boolean | undefined;
@@ -329,6 +352,7 @@ declare const actionsItemOpenAPISchema: z.ZodObject<{
     name: string;
     result: {
         summary?: boolean | undefined;
+        disabled?: boolean | undefined;
         translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
         readability?: boolean | undefined;
         sourceContent?: boolean | undefined;
@@ -354,6 +378,7 @@ declare const actionsItemOpenAPISchema: z.ZodObject<{
     name: string;
     result: {
         summary?: boolean | undefined;
+        disabled?: boolean | undefined;
         translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
         readability?: boolean | undefined;
         sourceContent?: boolean | undefined;
@@ -400,6 +425,7 @@ declare const actionsOpenAPISchema: z.ZodObject<z.objectUtil.extendShape<Omit<{
             operator: "contains" | "not_contains" | "eq" | "not_eq" | "gt" | "lt" | "regex";
         }>, "many">;
         result: z.ZodObject<{
+            disabled: z.ZodOptional<z.ZodBoolean>;
             translation: z.ZodOptional<z.ZodEnum<["en", "ja", "zh-CN", "zh-TW"]>>;
             summary: z.ZodOptional<z.ZodBoolean>;
             readability: z.ZodOptional<z.ZodBoolean>;
@@ -432,6 +458,7 @@ declare const actionsOpenAPISchema: z.ZodObject<z.objectUtil.extendShape<Omit<{
             webhooks: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         }, "strip", z.ZodTypeAny, {
             summary?: boolean | undefined;
+            disabled?: boolean | undefined;
             translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
             readability?: boolean | undefined;
             sourceContent?: boolean | undefined;
@@ -449,6 +476,7 @@ declare const actionsOpenAPISchema: z.ZodObject<z.objectUtil.extendShape<Omit<{
             webhooks?: string[] | undefined;
         }, {
             summary?: boolean | undefined;
+            disabled?: boolean | undefined;
             translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
             readability?: boolean | undefined;
             sourceContent?: boolean | undefined;
@@ -469,6 +497,7 @@ declare const actionsOpenAPISchema: z.ZodObject<z.objectUtil.extendShape<Omit<{
         name: string;
         result: {
             summary?: boolean | undefined;
+            disabled?: boolean | undefined;
             translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
             readability?: boolean | undefined;
             sourceContent?: boolean | undefined;
@@ -494,6 +523,7 @@ declare const actionsOpenAPISchema: z.ZodObject<z.objectUtil.extendShape<Omit<{
         name: string;
         result: {
             summary?: boolean | undefined;
+            disabled?: boolean | undefined;
             translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
             readability?: boolean | undefined;
             sourceContent?: boolean | undefined;
@@ -522,6 +552,7 @@ declare const actionsOpenAPISchema: z.ZodObject<z.objectUtil.extendShape<Omit<{
         name: string;
         result: {
             summary?: boolean | undefined;
+            disabled?: boolean | undefined;
             translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
             readability?: boolean | undefined;
             sourceContent?: boolean | undefined;
@@ -550,6 +581,7 @@ declare const actionsOpenAPISchema: z.ZodObject<z.objectUtil.extendShape<Omit<{
         name: string;
         result: {
             summary?: boolean | undefined;
+            disabled?: boolean | undefined;
             translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
             readability?: boolean | undefined;
             sourceContent?: boolean | undefined;
@@ -5772,6 +5804,7 @@ declare const _routes: hono_hono_base.HonoBase<Env, {
             input: {
                 json: {
                     inboxId: string;
+                    read?: boolean | undefined;
                     limit?: number | undefined;
                     publishedAfter?: string | undefined;
                     publishedBefore?: string | undefined;
@@ -5841,6 +5874,7 @@ declare const _routes: hono_hono_base.HonoBase<Env, {
                     } | undefined;
                     settings?: {
                         summary?: boolean | undefined;
+                        disabled?: boolean | undefined;
                         translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
                         readability?: boolean | undefined;
                         sourceContent?: boolean | undefined;
@@ -5923,6 +5957,18 @@ declare const _routes: hono_hono_base.HonoBase<Env, {
                         } | null | undefined;
                     };
                 } | undefined;
+            };
+            outputFormat: "json" | "text";
+            status: 200;
+        };
+        $delete: {
+            input: {
+                json: {
+                    entryId: string;
+                };
+            };
+            output: {
+                code: 0;
             };
             outputFormat: "json" | "text";
             status: 200;
@@ -6076,6 +6122,7 @@ declare const _routes: hono_hono_base.HonoBase<Env, {
                     } | undefined;
                     settings?: {
                         summary?: boolean | undefined;
+                        disabled?: boolean | undefined;
                         translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
                         readability?: boolean | undefined;
                         sourceContent?: boolean | undefined;
@@ -6392,6 +6439,26 @@ declare const _routes: hono_hono_base.HonoBase<Env, {
             status: 200;
         };
     };
+    "/discover/rsshub/route": {
+        $get: {
+            input: {
+                query: {
+                    route: string | string[];
+                };
+            };
+            output: {
+                data: {
+                    description: string;
+                    name: string;
+                    url: string;
+                    prefix: string;
+                    route?: any;
+                };
+            };
+            outputFormat: "json" | "text";
+            status: 200;
+        };
+    };
 } & {
     "/collections": {
         $get: {
@@ -6572,6 +6639,7 @@ declare const _routes: hono_hono_base.HonoBase<Env, {
                         name: string;
                         result: {
                             summary?: boolean | undefined;
+                            disabled?: boolean | undefined;
                             translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
                             readability?: boolean | undefined;
                             sourceContent?: boolean | undefined;
@@ -6606,6 +6674,7 @@ declare const _routes: hono_hono_base.HonoBase<Env, {
                         name: string;
                         result: {
                             summary?: boolean | undefined;
+                            disabled?: boolean | undefined;
                             translation?: "en" | "ja" | "zh-CN" | "zh-TW" | undefined;
                             readability?: boolean | undefined;
                             sourceContent?: boolean | undefined;
@@ -6656,6 +6725,7 @@ declare const _routes: hono_hono_base.HonoBase<Env, {
                     progressMax: number;
                     done: boolean;
                     doneAt: string | null;
+                    tx: string | null;
                     power: string;
                 }[];
                 done: number;
